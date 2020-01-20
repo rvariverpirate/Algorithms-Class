@@ -1,0 +1,23 @@
+<!-- Code from d3-graph-gallery.com -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<h2>CS-600 Algorithms Class Examples</h2>
+
+<script type="text/javascript" src="MyAlgorithmsLib.js"></script>
+
+<h3>Module 2</h3>
+<script type="text/javascript">
+	let algs = new algorithms();
+
+	// Create a random ordered list to test other functions
+	let ordered_list = algs.random_ordered_list(19);
+	console.log("ordered_list: ", ordered_list);
+
+	// Test the find next largest function
+	let x = 108;
+	console.log("x = ", x);
+	let next_largest = algs.find_next_largest(x, ordered_list);
+	console.log("next_largest = ", next_largest);
+
+</script>
