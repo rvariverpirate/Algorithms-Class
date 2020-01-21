@@ -8,20 +8,45 @@ Created by: Joseph Cannella
 class algorithms{
 	constructor(){};
 
+
+	// Generate a ramdon number in a range
+	rand_int(min, max){
+		return Math.floor(Math.random()*(min+max) + min - 1);
+	}
+
 	// Create ordered list to test other things
 	random_ordered_list(n){// between 0 and 3*((n+1)*n)/2
 		let sum = 0;
 		let ordered_list = new Array(n);
 		for(let i=0; i<n; i++){
-			let rand_num = i*3;//Math.floor(1 + Math.random()*3);
+			let rand_num = i*3;
 			sum += rand_num;
 			ordered_list[i] = sum;
 		}
 		return ordered_list;
 	}
 
+	// Create random list of unique vals (this is called a set)
+	random_unique_list(n, min, max){
+		let i = 0;
+		let uniqueList = new Array(n);
+		let uniqueVals = new Map();
+		while(i<n){
+			let randVal = this.rand_int(min, max);
+			if(!uniqueVals.has(randVal)){
+				console.log(randVal);
+				uniqueVals.set(randVal, i);
+				uniqueList[i] = randVal;
+				i++;
+			}
+		}
+		return uniqueList;
+	}
 
-	// Need: l < x < r
+
+	// This is basically jsut a modified Binary Search Algorithm
+	// Runtime should be O(log(n))
+	// Need: sigma[i] < x < sigma[i+1]
 	find_next_largest_rescursive(l_idx, r_idx, x, sigma){
 		// Get left and right values
 		var l = sigma[l_idx];// l_idx can be at least 0
@@ -31,9 +56,14 @@ class algorithms{
 		var mid_idx = Math.floor((l_idx + r_idx)/2);// if 5 -> 4
 		var mid = sigma[mid_idx];// mid value
 
-		if(r_idx == l_idx + 1){		
-			let solution =  r;//r > x ? r : sigma[r_idx + 1];
-			return solution;
+		if(r_idx == l_idx + 1){
+			if(r > x){// results converged and the value was found
+				return [r, r_idx];// want value and its index
+			}
+			// Otherwise no element was found that is greater than x
+			console.log("No Greater Element Found!!");
+			console.log("Returning x and prospective location to append it to array")
+			return [x, r_idx+1];
 		}
 
 		if(mid < x){// x is Greater than mid value
@@ -57,17 +87,63 @@ class algorithms{
 	}
 
 	// Homework 1 Question 1
-	next_permutation(n, sigma){
+	// Note: this will only work on permutations w/ unique digits
+	// Worst case is if the array is it's maximum possible permutation
+	// i.e sorted from largest to smallest
+	// in this case the runtime is O(n)
+	next_permutation(sigma){
+		console.log(sigma);
+		let n = sigma.length;
 		let min = sigma[n - 1];// Get the least significant element first
 		let ascending = [];
 		ascending.push(min);
-		for(let i=n-2; n>= 0; n--){
-			if(sigma[i] > sigma[i+1]){// were still ascending
-				ascending.push(sigma[i]);// add it to the ascending stack
+		let smallerDigit;
+		let inflectionPoint;
+		for(let i=n-1; i>= 0; i--){
+			//console.log(i);
+			if(sigma[i-1] > sigma[i]){// were still ascending
+				ascending.push(sigma[i-1]);// so add it to the ascending array
+				console.log(sigma[i]);
 			}
-			else{
-
+			else{// We have found the lowest magnitude location (i+1)
+				// whos digit can be swapped with the digit of a
+				// lower magnitude position with a digit greater than itself
+				// Basically a point of inflection..
+				inflectionPoint = i-1;
+				break;
 			}
 		}
+		console.log("ascending original: ", ascending);
+		smallerDigit = sigma[inflectionPoint];
+		console.log("smallerDigit = ", smallerDigit);
+		console.log("inflectionPoint = ", inflectionPoint);
+		// Note: this implies the array "ascending" is an ordered list
+		// so lets perform a search of the ordered list..
+		// Note: because we itterated in reverse we reversed it's order (which we wanted anyway)
+		let nextLargestData = algs.find_next_largest(smallerDigit, ascending);
+		let nextLargestDigit = nextLargestData[0];// This contains the next largest value
+		let nextLargestIndex = nextLargestData[1];// the index of the next largest data
+
+		// Swap
+		// Let's now place this digit into the point of inflection
+		sigma[inflectionPoint] = nextLargestDigit;
+
+		// And let's place the inflection value into the the nextLargest old location
+		ascending[nextLargestIndex] = smallerDigit;
+
+		console.log("nextLargestVal = ", nextLargestDigit);
+
+		console.log("sigma: ", sigma);
+		console.log("ascending: ", ascending);
+
+		// Now update the last k elemnents in sigma with the values from ascending
+		let beginning = n - ascending.length;
+		let k = 0;
+		for(let j=beginning; j<n; j++){
+			sigma[j] = ascending[k];
+			k++;
+		}
+		console.log("sigma: ", sigma);
+		return sigma;
 	}
 }

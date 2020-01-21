@@ -10,14 +10,34 @@
 <script type="text/javascript">
 	let algs = new algorithms();
 
-	// Create a random ordered list to test other functions
-	let ordered_list = algs.random_ordered_list(19);
-	console.log("ordered_list: ", ordered_list);
+	// Module 2 Testing
+	function test_module_2(){
+		// Create a random ordered list to test other functions
+		console.log("OREDERED LIST SECTION")
+		let ordered_list = algs.random_ordered_list(19);
+		console.log("ordered_list: ", ordered_list);
 
-	// Test the find next largest function
-	let x = 108;
-	console.log("x = ", x);
-	let next_largest = algs.find_next_largest(x, ordered_list);
-	console.log("next_largest = ", next_largest);
+		// Test the find next largest function
+		let x = 514;
+		console.log("x = ", x);
+		let next_largest = algs.find_next_largest(x, ordered_list);
+		console.log("next_largest = ", next_largest);
+
+
+		console.log("NEXT PERMUTATION SECTION")
+		console.log("Test 1");
+		let permutation = [2,3,5,4,1];// scenario from HW example
+		let next_permutation = algs.next_permutation(permutation);
+		console.log("original_permutation", permutation);
+		console.log("next_permutation: ", next_permutation);
+
+		console.log("Test 2");
+		permutation = algs.random_unique_list(7, 1, 10);
+		console.log("original_permutation", permutation);
+		next_permutation = algs.next_permutation(permutation);
+		console.log("next_permutation: ", next_permutation);
+
+	}
+	test_module_2();
 
 </script>
