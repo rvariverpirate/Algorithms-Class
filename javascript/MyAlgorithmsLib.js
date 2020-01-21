@@ -34,7 +34,6 @@ class algorithms{
 		while(i<n){
 			let randVal = this.rand_int(min, max);
 			if(!uniqueVals.has(randVal)){
-				console.log(randVal);
 				uniqueVals.set(randVal, i);
 				uniqueList[i] = randVal;
 				i++;
@@ -92,7 +91,6 @@ class algorithms{
 	// i.e sorted from largest to smallest
 	// in this case the runtime is O(n)
 	next_permutation(sigma){
-		console.log(sigma);
 		let n = sigma.length;
 		let min = sigma[n - 1];// Get the least significant element first
 		let ascending = [];
@@ -100,10 +98,8 @@ class algorithms{
 		let smallerDigit;
 		let inflectionPoint;
 		for(let i=n-1; i>= 0; i--){
-			//console.log(i);
 			if(sigma[i-1] > sigma[i]){// were still ascending
 				ascending.push(sigma[i-1]);// so add it to the ascending array
-				console.log(sigma[i]);
 			}
 			else{// We have found the lowest magnitude location (i+1)
 				// whos digit can be swapped with the digit of a
@@ -113,10 +109,7 @@ class algorithms{
 				break;
 			}
 		}
-		console.log("ascending original: ", ascending);
 		smallerDigit = sigma[inflectionPoint];
-		console.log("smallerDigit = ", smallerDigit);
-		console.log("inflectionPoint = ", inflectionPoint);
 		// Note: this implies the array "ascending" is an ordered list
 		// so lets perform a search of the ordered list..
 		// Note: because we itterated in reverse we reversed it's order (which we wanted anyway)
@@ -131,11 +124,6 @@ class algorithms{
 		// And let's place the inflection value into the the nextLargest old location
 		ascending[nextLargestIndex] = smallerDigit;
 
-		console.log("nextLargestVal = ", nextLargestDigit);
-
-		console.log("sigma: ", sigma);
-		console.log("ascending: ", ascending);
-
 		// Now update the last k elemnents in sigma with the values from ascending
 		let beginning = n - ascending.length;
 		let k = 0;
@@ -143,7 +131,6 @@ class algorithms{
 			sigma[j] = ascending[k];
 			k++;
 		}
-		console.log("sigma: ", sigma);
 		return sigma;
 	}
 }
