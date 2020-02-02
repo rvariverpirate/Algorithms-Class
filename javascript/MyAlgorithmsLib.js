@@ -7,9 +7,8 @@ Created by: Joseph Cannella
 
 class algorithms{
 	constructor(){};
-
-
-	// Generate a ramdon number in a range
+	
+	// Generate a random number in a range
 	rand_int(min, max){
 		return Math.floor(Math.random()*(min+max) + min - 1);
 	}
