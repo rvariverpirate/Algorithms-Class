@@ -20,17 +20,13 @@ class MinHeap{
         let l = 2*i+1;
         let r = 2*i+2;
         let smallest = i;// Index of smallest element
-        console.log("this.heap[i] = ", this.heap[i]);
-        if(l < this.heapSize && this.heap[l].value < this.heap[i].value){
+        if(l < this.heapSize && this.heap[l].value < this.heap[smallest].value){
             smallest = l;
-            console.log("l");
         }
-        if(r < this.heapSize && this.heap[r].value < this.heap[i].value){
+        if(r < this.heapSize && this.heap[r].value < this.heap[smallest].value){
             smallest = r;
-            console.log("r");
         }
         if(smallest != i){// swap A[i] and A[smallest]
-            console.log("swap");
             let tmp = this.heap[i];
             this.heap[i] = this.heap[smallest];
             this.heap[smallest] = tmp;
@@ -43,22 +39,54 @@ class MinHeap{
         let startIdx = Math.floor(this.arrayLength/2) - 1;
         for (let i = startIdx; i >= 0; i--){
             this.MinHeapify(i);
-            console.log(i);
-            console.log(this.heap);
         }
     }
 
     // Add a Heapsort Method
     HeapSort(){
-        let last = this.arrayLength-1;
-        for(let i=last; i>=0; i --){
+        let last = this.arrayLength;
+        for(let i=last-1; i>=0; i --){
             let tmp = this.heap[0];
             this.heap[0] = this.heap[i];
             this.heap[i] = tmp;
             this.heapSize = i;
             this.MinHeapify(0);
         }
+        this.heapSize = this.arrayLength;// Restore this property
         this.heap.reverse();
+    }
+
+    // Add ability to replace the root with an outside node
+    ReplaceRoot(node){// returns the previous root node
+        // Get the in element (the root)
+        let root = this.heap[0];
+
+        // Replace the root with the last element
+        this.heap[0] = node;
+        
+        // Re-Heapify the root node
+        this.MinHeapify(0);
+
+        return root;
+    }
+
+    // Add ability to return roots value and delete it
+    PopRoot(){
+
+        // Get last element
+        lastElement = this.heap[this.heap.length - 1];
+
+        // Replace the root with the last element, return the old root
+        let root = ReplaceRoot(lastElement);
+
+        // Decrese size of the heap
+        this.heap.length--;
+        
+        // Re-Heapify the root node
+        this.MinHeapify(0);
+
+        return root;
+
     }
 }
 
@@ -81,20 +109,60 @@ function generateSortedLists(k, l){
 }
 
 // Generate random sorted input lists
-var vals = [5, 14, 20, 25, 31];
+var vals = [5, 14, 20, 25, 31, 67, 300, 498];
 var nodes = [];
 for(let i=0; i< vals.length; i++){
     node = new HeapNode(vals[i], 0);
     nodes.push(node);
 }
-//var sortedLists = generateSortedLists(1, 12);
-//console.log(sortedLists);
 
+// Problem: Merge k sorted lists into one sorted array of size n (total number of elements in all input arrays)
+// Note: We know the set cotaining the 0th value of each sorted array must contain the minimum
+// we also know that the next value in any array must be less than the previous
+// Approach: A priority queue could exploit these properties
+function MergeKSortedArrays(lists){
+    // For simplicity assume lists are all of even length
+    let totalElements = lists.length*lists[0].length;
+    let h_arr = [];
+    let results = [];
+    lists.forEach(list => h_arr.push(list.shift()));
+
+    // Heapify this result
+    minHeap = new MinHeap(h_arr);
+    console.log(minHeap);
+
+    while(results.length < totalElements){
+        console.log("results: ", results);
+        let root = minHeap.heap[0];
+        if(root.value == null){
+            break;
+        }
+        let value = root.value;
+        let origin = root.origin;
+
+        // Add smallest value from our min heap (priority queue) to our results array
+        results.push(value);
+
+        // Replace the heaps root with the next value from its originating array
+        // which is the next largest val wrt origin array
+        minHeap.ReplaceRoot(lists[origin].shift());
+    }
+    return results;
+}
+
+
+// Create the sorted list
+// Note: A sorted list is already a minHeap!!!!!!
+var sortedLists = generateSortedLists(4, 5);
+console.log(sortedLists);
+
+let results = MergeKSortedArrays(sortedLists);
+console.log(results);
+
+/*
 // Lets test the code
-//let testArray = [3, 1, 6, 5, 2, ];//expected result = [ 1, 3, 6, 5, 2 ]
 console.log("Input: ");
 console.log(nodes, "\n");
-console.log("Creating Heap:");
 var minHeap = new MinHeap(nodes.slice(0));
 console.log("Result: ");
 console.log(minHeap.heap), "\n";
@@ -102,20 +170,4 @@ console.log(minHeap.heap), "\n";
 // Lets now sort the heap
 minHeap.HeapSort();
 console.log("Sorted Result: ");
-console.log(minHeap.heap);
-
-
-// Problem: Merge k sorted lists into one sorted array of size n (total number of elements in all input arrays)
-// Note: We know the set cotaining the 0th value of each sorted array must contain the minimum
-// we also know that the next value in any array must be less than the previous
-// Approach: A priority queue could exploit these properties 
-function MergeKSortedArrays(lists){
-    let h_arr = [];
-    let result_size = 0;
-    for(list in lists){
-        
-    }
-    
-}
-
-
+console.log(minHeap.heap);*/
