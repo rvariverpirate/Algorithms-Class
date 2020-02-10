@@ -72,21 +72,21 @@ class MinHeap{
 
     // Add ability to return roots value and delete it
     PopRoot(){
+        let root = this.heap[0];
+        if(this.heap.length >= 1){// There needs to be atleast one elemnt in the heap
+            // Get last element
+            let lastElement = this.heap[this.heap.length - 1];
 
-        // Get last element
-        lastElement = this.heap[this.heap.length - 1];
+            // Replace the root with the last element, return the old root
+            this.ReplaceRoot(lastElement);
+            
+            // Decrese size of the heap
+            this.heap.length--;
+            this.heapSize = this.heap.length;
 
-        // Replace the root with the last element, return the old root
-        let root = ReplaceRoot(lastElement);
-
-        // Decrese size of the heap
-        this.heap.length--;
-        
-        // Re-Heapify the root node
-        this.MinHeapify(0);
-
-        return root;
-
+            // Re-Heapify the root node
+            this.MinHeapify(0);
+        }
     }
 }
 
@@ -108,12 +108,23 @@ function generateSortedLists(k, l){
     return lists;
 }
 
-// Generate random sorted input lists
-var vals = [5, 14, 20, 25, 31, 67, 300, 498];
-var nodes = [];
-for(let i=0; i< vals.length; i++){
-    node = new HeapNode(vals[i], 0);
-    nodes.push(node);
+function RemoveEmptyLists(lists){
+    let origin = 0;
+    lists.forEach((list) => {
+        if(list.length == 0){
+            let dummyNode = new HeapNode(Infinity, origin); 
+            list.push(dummyNode);
+        }
+        origin ++;
+    });
+}
+
+function FindMin(lists){
+    let target = lists[0][0];
+    lists.forEach((list) =>{
+        target = list[0].value < target.value ? list[0] : target;
+    });
+    return target;
 }
 
 // Problem: Merge k sorted lists into one sorted array of size n (total number of elements in all input arrays)
@@ -132,20 +143,24 @@ function MergeKSortedArrays(lists){
     console.log(minHeap);
 
     while(results.length < totalElements){
-        console.log("results: ", results);
         let root = minHeap.heap[0];
-        if(root.value == null){
-            break;
-        }
         let value = root.value;
         let origin = root.origin;
 
         // Add smallest value from our min heap (priority queue) to our results array
         results.push(value);
+        console.log(minHeap);
+        console.log("results: ", results);
 
         // Replace the heaps root with the next value from its originating array
         // which is the next largest val wrt origin array
-        minHeap.ReplaceRoot(lists[origin].shift());
+        if(lists[origin].length > 0){
+            minHeap.ReplaceRoot(lists[origin].shift());
+        }
+        else{// Our next min must be contained in the current heap
+            minHeap.PopRoot();
+            console.log("PopRoot");
+        }
     }
     return results;
 }
@@ -158,16 +173,4 @@ console.log(sortedLists);
 
 let results = MergeKSortedArrays(sortedLists);
 console.log(results);
-
-/*
-// Lets test the code
-console.log("Input: ");
-console.log(nodes, "\n");
-var minHeap = new MinHeap(nodes.slice(0));
-console.log("Result: ");
-console.log(minHeap.heap), "\n";
-
-// Lets now sort the heap
-minHeap.HeapSort();
-console.log("Sorted Result: ");
-console.log(minHeap.heap);*/
+console.log("results.length = ", results.length);

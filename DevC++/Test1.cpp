@@ -121,14 +121,12 @@ void Heap::MaxHeapifyIter(int A[], int hSize, int i){
 		}
 		count ++;
 	}
-	cout << "\n itterations: " << count << "\n";
 }
 
 // Lets create the MaxHeap from an array
 void Heap::BuildMaxHeap(int A[], int length, bool itter){
 	int startIdx = (length/2) - 1;
 	for(int i=startIdx; i >= 0; i--){
-		cout << "i = " << i << ", A[i] = " << A[i] << endl;
 		if(itter){// Solve the problem with the iterative solution
 			MaxHeapifyIter(A, length, i);
 		}
@@ -139,7 +137,7 @@ void Heap::BuildMaxHeap(int A[], int length, bool itter){
 }
 
 void Heap::printHeap(int A[], int n){
-	cout << "Heap Contents: { ";
+	cout << " { ";
 	int j = 0;
 	while(j<n - 1){
 		cout << A[j] << ", ";
@@ -162,13 +160,19 @@ int main(){
     cout << "Test MaxHeap: \n";
     int heapTest[] = { 1, 3, 5, 4, 6, 13, 10, 9, 8, 15, 17 };
     int length = sizeof(heapTest)/sizeof(heapTest[0]);
-    cout << "originalLength = " << length << "\n";
     Heap myHeap;
-    myHeap.BuildMaxHeap(heapTest, length, true);
+    cout << "InputArray : ";
+    myHeap.printHeap(heapTest, length); 
+    myHeap.BuildMaxHeap(heapTest, length, true); 
+    cout << "\nResultantHeap: ";
     myHeap.printHeap(heapTest, length); // Schould Be: { 17, 15, 13, 9, 6, 5, 10, 4, 8, 3, 1}
-    cout << "\n Should Be:    { 17, 15, 13, 9, 6, 5, 10, 4, 8, 3, 1}\n";
+    cout << "\n Should Be:  { 17, 15, 13, 9, 6, 5, 10, 4, 8, 3, 1}\n";
     
-    
+/*
+InputArray :  { 1, 3, 5, 4, 6, 13, 10, 9, 8, 15, 17}
+ResultantHeap:  { 17, 15, 13, 9, 6, 5, 10, 4, 8, 3, 1}
+Should Be:  { 17, 15, 13, 9, 6, 5, 10, 4, 8, 3, 1}
+ */  
     return 0;
 }
 
